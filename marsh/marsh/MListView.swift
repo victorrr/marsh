@@ -8,14 +8,18 @@ struct MListView: View {
             switch viewModel.viewState {
             case .empty:
                 emptyView
-            case .images(let images):
-                resultScrollView(images)
+            case .cryptos(let cryptos):
+                resultScrollView(cryptos)
             case .loading:
                 loadingView
             case .error(let error):
                 errorView(desciption: (error as? NetworkError)?.localizedDescription)
             }
-            searchTextField
+            HStack(spacing: 10) {
+                Spacer()
+                dropdownView
+            }
+            .padding()
         }
     }
 }
@@ -24,15 +28,8 @@ struct MListView: View {
 
 private extension MListView {
 
-    var searchTextField: some View {
-        TextField(LocalizedStringKey("search".localized),
-                  text: $viewModel.searchTerm,
-                  axis: .horizontal)
-        .font(Font.title2)
-        .padding(Constant.searchPadding)
-        .background(Color.gray)
-        .cornerRadius(Constant.searchRadius)
-        .padding()
+    var dropdownView: some View {
+        CurrencyDropdownView(selectedOption: $viewModel.currency)
     }
 
     var emptyView: some View {
@@ -70,12 +67,11 @@ private extension MListView {
         .padding()
     }
 
-    func resultScrollView(_ images: [ImageItem]) -> some View {
+    func resultScrollView(_ items: [CryptoItem]) -> some View {
         ScrollView {
             VStack(alignment: .leading) {
-                ForEach(images, id: \.self) { item in
-                    MItemView(imageUrl: viewModel.imageUrl(imageItem: item),
-                                  name: item.title)
+                ForEach(items, id: \.self) { item in
+                    MItemView(name: item.baseAsset, value: item.openPrice, currency: item.quoteAsset)
                     Divider()
                 }
                 Spacer()
@@ -91,7 +87,6 @@ private extension MListView {
 
     struct Constant {
         static let topScrollInset: CGFloat = 60,
-                   searchRadius: CGFloat = 4,
                    searchPadding: CGFloat = 6
     }
 }
@@ -100,23 +95,24 @@ private extension MListView {
 
 private var previewNetworkService: MockNetworkService {
     let networkService = MockNetworkService()
-    let expectedImageItem = ImageItem(id: "54186654298",
-                                      server: "65535",
-                                      secret: "8bdfbb9652",
-                                      title: "Title for image")
-    let photos = PhotosResponse(
-        photos: Photos(
-            photo: [expectedImageItem]
-        )
-    )
-    networkService.mockResult = photos
+    let items = [CryptoItem(symbol: "",
+                            baseAsset: "",
+                            quoteAsset: "",
+                            openPrice: "",
+                            lowPrice: "",
+                            highPrice: "",
+                            lastPrice: "",
+                            volume: "",
+                            bidPrice: "",
+                            askPrice: "",
+                            at: 1)]
+    networkService.mockResult = items
     return networkService
 }
 
 private var previewVM: MListViewModel {
     let apiService = ApiService(networkService: previewNetworkService)
     let viewModel = MListViewModel(apiService: apiService)
-    viewModel.searchTerm = "cats"
     return viewModel
 }
 

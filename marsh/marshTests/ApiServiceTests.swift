@@ -23,7 +23,7 @@ final class ApiServiceTests: XCTestCase {
 extension ApiServiceTests {
 
     func testFetchImageItems_WithEmptyText_ReturnsNil() async throws {
-        let result = try await sut.fetchImageItems(text: "")
+        let result = try await sut.fetchCryptoCurrencies(text: "")
         XCTAssertNil(result)
     }
 
@@ -36,7 +36,7 @@ extension ApiServiceTests {
         )
         mockNetworkService.mockResult = mockPhotos
 
-        let result = try await sut.fetchImageItems(text: "test")
+        let result = try await sut.fetchCryptoCurrencies(text: "test")
 
         XCTAssertEqual(result?.count, 1)
         XCTAssertEqual(result?.first?.id, expectedImageItem.id)
@@ -47,7 +47,7 @@ extension ApiServiceTests {
         mockNetworkService.error = NetworkError.invalidResponse
 
         do {
-            _ = try await sut.fetchImageItems(text: "test")
+            _ = try await sut.fetchCryptoCurrencies(text: "test")
             XCTFail("Expected error to be thrown")
         } catch {
             XCTAssertEqual(error as? NetworkError, NetworkError.invalidResponse)

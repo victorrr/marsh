@@ -1,13 +1,14 @@
 import SwiftUI
 
 struct MItemView: View {
-    var imageUrl: URL?
     var name: String
+    var value: String
+    var currency: String
 
     var body: some View {
         HStack(spacing: Constant.spacing) {
             VStack {
-                imageView
+                valueView
                 Spacer()
             }
             VStack {
@@ -24,40 +25,13 @@ struct MItemView: View {
 
 private extension MItemView {
 
-    var imageView: some View {
-        AsyncImage(url: imageUrl,
-                   content: imagePhase)
-        .frame(width: Constant.imageWidth,
-               height: Constant.imageWidth)
+    var valueView: some View {
+        Text("\(value) \(currency)")
     }
 
     var titleView: some View {
         Text(name)
             .font(.title2)
-    }
-
-    func imagePhase(_ phase: AsyncImagePhase) -> some View {
-        switch phase {
-        case .empty:
-            AnyView(ProgressView())
-        case .success(let image):
-            AnyView(
-                image
-                    .resizable()
-                    .scaledToFit()
-                    .cornerRadius(Constant.imageRadius)
-            )
-        case .failure:
-            AnyView(
-                Image(systemName: "photo")
-                    .resizable()
-                    .scaledToFit()
-                    .foregroundColor(.gray)
-                    .padding()
-            )
-        @unknown default:
-            AnyView(EmptyView())
-        }
     }
 }
 
@@ -77,7 +51,7 @@ private extension MItemView {
 #Preview {
     VStack {
         Spacer()
-        MItemView(imageUrl: URL(string: "https://live.staticflickr.com/65535/54195654010_d4ef9b9f15_q.jpg"), name: "Image title")
+        MItemView(name: "Image title", value: "150", currency: "USD")
             .frame(height: 150)
         Spacer()
     }

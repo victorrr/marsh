@@ -4,7 +4,7 @@ enum NetworkError: Error {
     case invalidResponse
     case failedToDecodeResponse
     case invalidUrl
-    case noImages
+    case noItems
 
     var localizedDescription: String {
         switch self {
@@ -14,7 +14,7 @@ enum NetworkError: Error {
             "failed_to_decode_response".localized
         case .invalidUrl:
             "invalid_url".localized
-        case .noImages:
+        case .noItems:
             "no_images".localized
         }
     }

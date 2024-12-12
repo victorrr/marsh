@@ -4,8 +4,8 @@ import SwiftUI
 // MARK: - ApiServiceProtocol
 
 protocol ApiServiceProtocol {
-    func fetchImageItems(text: String) async throws -> [ImageItem]?
-    func imageUrl(imageItem: ImageItem) throws -> URL
+    func fetchCryptos() async throws -> [CryptoItem]
+    func fetchExchangeRate(currency: String) async throws -> CGFloat
 }
 
 // MARK: - ApiService
@@ -18,32 +18,25 @@ final class ApiService: ApiServiceProtocol {
         self.networkService = networkService
     }
 
-    func fetchImageItems(text: String) async throws -> [ImageItem]? {
-        guard !text.isEmpty else { return nil }
-        let queryItems = [
-            URLQueryItem(name: Constant.method, value: Constant.methodValue),
-            URLQueryItem(name: Constant.apiKey, value: apiKey),
-            URLQueryItem(name: Constant.text, value: text),
-            URLQueryItem(name: Constant.format, value: Constant.json),
-            URLQueryItem(name: Constant.nojsoncallback, value: Constant.one)
-        ]
-        guard let url = createUrl(host: Constant.imagesHost, path: Constant.imagesPath, queryItems: queryItems) else {
+    func fetchCryptos() async throws -> [CryptoItem] {
+        guard let url = createUrl(host: Constant.cryptoHost, path: Constant.cryptoPath) else {
             throw NetworkError.invalidUrl
         }
         let request = createGETRequest(url: url)
-        let photos: PhotosResponse = try await networkService.fetch(with: request)
-        return photos.photos.photo
+        let cryptoItems: [CryptoItem] = try await networkService.fetch(with: request)
+        return cryptoItems
     }
 
-    func imageUrl(imageItem: ImageItem) throws -> URL {
-        guard !imageItem.server.isEmpty, !imageItem.id.isEmpty, !imageItem.secret.isEmpty else {
+    func fetchExchangeRate(currency: String) async throws -> CGFloat {
+        let queryItems = [
+            URLQueryItem(name: "currency", value: currency)
+        ]
+        guard let url = createUrl(host: Constant.exchangeHost, path: Constant.exchangePath, queryItems: queryItems) else {
             throw NetworkError.invalidUrl
         }
-        let path = "/\(imageItem.server)/\(imageItem.id)_\(imageItem.secret)_q.jpg"
-        guard let url = createUrl(host: Constant.imageHost, path: path) else {
-            throw NetworkError.invalidUrl
-        }
-        return url
+        let request = createGETRequest(url: url)
+        let cryptoItems: [CryptoItem] = try await networkService.fetch(with: request)
+        return 1
     }
 }
 
@@ -76,19 +69,19 @@ private extension ApiService {
 
     struct Constant {
         static let scheme = "https",
-                   imagesHost = "www.flickr.com",
-                   imageHost = "live.staticflickr.com",
+                   cryptoHost = "api.wazirx.com",
+                   exchangeHost = "live.staticflickr.com",
                    applicationJson = "application/json",
                    contentType = "Content-Type",
                    accept = "accept",
                    getMethod = "GET",
-                   imagesPath = "/services/rest/",
+                   cryptoPath = "/sapi/v1/tickers/24hr",
+                   exchangePath = "/sapi/v1/tickers/24hr",
                    text = "text",
                    apiKey = "api_key",
                    format = "format",
                    json = "json",
                    method = "method",
-                   methodValue = "flickr.photos.search",
                    fromDate = "fromDate",
                    toDate = "toDate",
                    nojsoncallback = "nojsoncallback",
