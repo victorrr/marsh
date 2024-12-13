@@ -71,7 +71,7 @@ private extension MListView {
         ScrollView {
             VStack(alignment: .leading) {
                 ForEach(items, id: \.self) { item in
-                    MItemView(name: item.name, value: item.price, currency: viewModel.selectedCurrency.rawValue)
+                    MItemView(name: item.name, value: String(item.price), currency: viewModel.selectedCurrency.rawValue)
                     Divider()
                 }
                 Spacer()
@@ -95,7 +95,7 @@ private extension MListView {
 
 private var previewNetworkService: MockNetworkService {
     let networkService = MockNetworkService()
-    let items = [CryptoItem(name: "BTC", price: "100")]
+    let items = [CryptoItem(name: "BTC", price: 100)]
     networkService.mockResult = items
     return networkService
 }

@@ -12,7 +12,7 @@ final class MListViewModel: ObservableObject {
     init(apiService: ApiServiceProtocol) {
         self.apiService = apiService
         fetchCryptoCurrencies()
-        observeSearches()
+        observeCurrency()
     }
 }
 
@@ -42,22 +42,26 @@ extension MListViewModel {
 
 private extension MListViewModel {
 
-    func observeSearches() {
+    func observeCurrency() {
         $selectedCurrency
             .receive(on: RunLoop.main)
-            .sink(receiveValue: self.selectCurrency)
+            .sink {
+                let exchangeRatedCryptos = self.exchangeRatedCryptos(currency: $0)
+                self.viewState = .cryptos(exchangeRatedCryptos)
+            }
             .store(in: &cancellables)
     }
 
-    func selectCurrency(_ currency: Currency) {
-        let exchangeRate = exchangeItems.first { $0.currency == currency }?.value ?? 1
-        let exchangeRatedCryptos = cryptos
-            .map {
+    func exchangeRatedCryptos(currency: Currency) -> [CryptoItem] {
+        guard let exchangeRate = exchangeItems.first(where: { $0.currency == currency })?.value else {
+            return []
+        }
+        return cryptos
+            .compactMap {
                 var crypto = $0
-                crypto.price = String((crypto.price.cgFloat ?? 1)*exchangeRate)
+                crypto.price = crypto.price*exchangeRate
                 return crypto
             }
-        self.viewState = .cryptos(exchangeRatedCryptos)
     }
 
     func fetchCryptoCurrencies() {
@@ -80,7 +84,8 @@ private extension MListViewModel {
                     return
                 }
                 self.cryptos = cryptos.prefix(Constant.maxNumberOfCryptos).map { $0 }
-                selectCurrency(selectedCurrency)
+                let exchangeRatedCryptos = self.exchangeRatedCryptos(currency: selectedCurrency)
+                self.viewState = .cryptos(exchangeRatedCryptos)
             } catch {
                 self.viewState = .error(error)
             }
