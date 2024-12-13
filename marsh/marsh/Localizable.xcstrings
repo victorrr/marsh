@@ -11,19 +11,19 @@
         }
       }
     },
-    "empty_search" : {
+    "empty_view" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Search for some images and you will see them here"
+            "value" : "Here you will see the crypto currencies with their exchange rates"
           }
         },
         "sv" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Sök efter bilder så kommer du se dem här"
+            "value" : "Här kommer du se krypto valutor med deras växelkurs"
           }
         }
       }
@@ -79,36 +79,19 @@
         }
       }
     },
-    "no_images" : {
+    "no_items" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "No images matching your search was found"
+            "value" : "No crypto currencies were found"
           }
         },
         "sv" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Inga bilder hittades som matchar din sökning"
-          }
-        }
-      }
-    },
-    "search" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Search"
-          }
-        },
-        "sv" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sök"
+            "value" : "Inga kryptovalutor kunde hittas"
           }
         }
       }

@@ -15,7 +15,7 @@ enum NetworkError: Error {
         case .invalidUrl:
             "invalid_url".localized
         case .noItems:
-            "no_images".localized
+            "no_items".localized
         }
     }
 }

@@ -42,7 +42,7 @@ private extension CryptosListView {
     var emptyView: some View {
         VStack {
             Spacer()
-            Text("empty_search")
+            Text("empty_view")
                 .font(.title)
                 .padding()
                 .multilineTextAlignment(.center)
