@@ -20,4 +20,13 @@ struct ExchangeRates: Codable {
 enum Currency: String, Codable, CaseIterable {
     case USD
     case SEK
+
+    var name: String {
+        switch self {
+        case .USD:
+            return "$"
+        case .SEK:
+            return "kr"
+        }
+    }
 }

@@ -1,8 +1,8 @@
 import Combine
 import Foundation
 
-final class MListViewModel: ObservableObject {
-    @Published var selectedCurrency: Currency = .USD //TODO: Kanske döpa om till fiatCurrency
+final class CryptosListViewModel: ObservableObject {
+    @Published var selectedCurrency: Currency = .USD
     @Published var viewState = ViewState.empty
     private var apiService: ApiServiceProtocol
     private var cancellables = Set<AnyCancellable>()
@@ -11,14 +11,14 @@ final class MListViewModel: ObservableObject {
 
     init(apiService: ApiServiceProtocol) {
         self.apiService = apiService
-        fetchCryptoCurrencies()
+        fetchCryptosAndExchangeRates()
         observeCurrency()
     }
 }
 
 // MARK: - ExchangeItem
 
-private extension MListViewModel {
+private extension CryptosListViewModel {
 
     struct ExchangeItem {
         let currency: Currency
@@ -28,7 +28,7 @@ private extension MListViewModel {
 
 // MARK: - ViewState
 
-extension MListViewModel {
+extension CryptosListViewModel {
 
     enum ViewState {
         case empty
@@ -40,7 +40,7 @@ extension MListViewModel {
 
 // MARK: - Private
 
-private extension MListViewModel {
+private extension CryptosListViewModel {
 
     func observeCurrency() {
         $selectedCurrency
@@ -64,7 +64,7 @@ private extension MListViewModel {
             }
     }
 
-    func fetchCryptoCurrencies() {
+    func fetchCryptosAndExchangeRates() {
         Task { @MainActor in
             do {
                 if case .empty = self.viewState {
@@ -95,7 +95,7 @@ private extension MListViewModel {
 
 // MARK: - Constant
 
-private extension MListViewModel {
+private extension CryptosListViewModel {
 
     struct Constant {
         static let maxNumberOfCryptos: Int = 50

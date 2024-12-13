@@ -1,7 +1,7 @@
 import SwiftUI
 
-struct MListView: View {
-    @ObservedObject var viewModel: MListViewModel
+struct CryptosListView: View {
+    @ObservedObject var viewModel: CryptosListViewModel
 
     var body: some View {
         ZStack(alignment: .top) {
@@ -21,12 +21,19 @@ struct MListView: View {
             }
             .padding()
         }
+        .background(
+            LinearGradient(
+                gradient: Gradient(colors: [Color.white, Color.gray.opacity(0.2)]),
+                startPoint: .top,
+                endPoint: .bottom
+            )
+        )
     }
 }
 
 // MARK: - Subviews
 
-private extension MListView {
+private extension CryptosListView {
 
     var dropdownView: some View {
         CurrencyDropdownView(selectedOption: $viewModel.selectedCurrency)
@@ -71,8 +78,7 @@ private extension MListView {
         ScrollView {
             VStack(alignment: .leading) {
                 ForEach(items, id: \.self) { item in
-                    MItemView(name: item.name, value: String(item.price), currency: viewModel.selectedCurrency.rawValue)
-                    Divider()
+                    CryptoView(name: item.name, value: item.price, currency: viewModel.selectedCurrency)
                 }
                 Spacer()
             }
@@ -83,7 +89,7 @@ private extension MListView {
 
 // MARK: - Constant
 
-private extension MListView {
+private extension CryptosListView {
 
     struct Constant {
         static let topScrollInset: CGFloat = 60,
@@ -95,17 +101,17 @@ private extension MListView {
 
 private var previewNetworkService: MockNetworkService {
     let networkService = MockNetworkService()
-    let items = [CryptoItem(name: "BTC", price: 100)]
+    let items = [CryptoItem(name: "btc", price: 100)]
     networkService.mockResult = items
     return networkService
 }
 
-private var previewVM: MListViewModel {
+private var previewVM: CryptosListViewModel {
     let apiService = ApiService(networkService: previewNetworkService)
-    let viewModel = MListViewModel(apiService: apiService)
+    let viewModel = CryptosListViewModel(apiService: apiService)
     return viewModel
 }
 
 #Preview {
-    MListView(viewModel: previewVM)
+    CryptosListView(viewModel: previewVM)
 }

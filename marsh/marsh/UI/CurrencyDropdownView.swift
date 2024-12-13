@@ -18,14 +18,28 @@ struct CurrencyDropdownView: View {
         } label: {
             HStack {
                 Text(selectedOption.rawValue)
+                    .fontWeight(.medium)
+                    .foregroundColor(.white)
                 Image(systemName: "chevron.down")
+                    .foregroundColor(.white)
             }
             .padding()
-            .background(Color.gray.opacity(0.2))
+            .background(Color.gray)
             .cornerRadius(8)
         }
     }
 }
+
+// MARK: - Constant
+
+private extension CurrencyDropdownView {
+
+    struct Constant {
+        static let cornerRadius: CGFloat = 8
+    }
+}
+
+// MARK: - Preview
 
 #Preview {
     CurrencyDropdownView(selectedOption: .constant(.USD))

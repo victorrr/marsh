@@ -4,13 +4,13 @@ import SwiftUI
 struct marshApp: App {
     var body: some Scene {
         WindowGroup {
-            MListView(viewModel: viewModel)
+            CryptosListView(viewModel: viewModel)
         }
     }
 
-    private var viewModel: MListViewModel {
+    private var viewModel: CryptosListViewModel {
         let networkService = NetworkService()
         let apiService = ApiService(networkService: networkService)
-        return MListViewModel(apiService: apiService)
+        return CryptosListViewModel(apiService: apiService)
     }
 }
