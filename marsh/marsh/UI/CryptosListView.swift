@@ -92,8 +92,7 @@ private extension CryptosListView {
 private extension CryptosListView {
 
     struct Constant {
-        static let topScrollInset: CGFloat = 60,
-                   searchPadding: CGFloat = 6
+        static let topScrollInset: CGFloat = 60
     }
 }
 

@@ -66,7 +66,7 @@ extension ApiServiceTests {
 
         let url = try sut.imageUrl(imageItem: imageItem)
 
-        let expectedUrlString = "https://live.staticflickr.com/server1/123_abc_q.jpg"
+        let expectedUrlString = "https://live.static.com/server1/123_abc_q.jpg"
         XCTAssertEqual(url.absoluteString, expectedUrlString)
     }
 
