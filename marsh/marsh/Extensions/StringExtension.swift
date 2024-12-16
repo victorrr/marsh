@@ -1,5 +1,7 @@
 import Foundation
 
+// MARK: - Localization
+
 extension String {
 
     var localized: String {

@@ -18,66 +18,54 @@ final class ApiServiceTests: XCTestCase {
     }
 }
 
-// MARK: - FetchImageItems
+// MARK: - FetchCryptos
 
 extension ApiServiceTests {
 
-    func testFetchImageItems_WithEmptyText_ReturnsNil() async throws {
-        let result = try await sut.fetchCryptoCurrencies(text: "")
-        XCTAssertNil(result)
+    func testFetchCryptos_WithValidResponse_ReturnsCrytpos() async throws {
+        let expectedCryptoItem = CryptoItem(name: "BTC", price: 6000)
+        let mockCryptos = [expectedCryptoItem, CryptoItem(name: "AAD", price: 800.20)]
+        mockNetworkService.mockResult = mockCryptos
+
+        let result = try await sut.fetchCryptos()
+
+        XCTAssertEqual(result.count, 2)
+        XCTAssertEqual(result.first?.name, expectedCryptoItem.name)
+        XCTAssertEqual(result.first?.price, expectedCryptoItem.price)
     }
 
-    func testFetchImageItems_WithValidResponse_ReturnsImageItems() async throws {
-        let expectedImageItem = ImageItem(id: "1", server: "server1", secret: "secret1", title: "title1")
-        let mockPhotos = PhotosResponse(
-            photos: Photos(
-                photo: [expectedImageItem]
-            )
-        )
-        mockNetworkService.mockResult = mockPhotos
-
-        let result = try await sut.fetchCryptoCurrencies(text: "test")
-
-        XCTAssertEqual(result?.count, 1)
-        XCTAssertEqual(result?.first?.id, expectedImageItem.id)
-        XCTAssertEqual(result?.first?.title, expectedImageItem.title)
-    }
-
-    func testFetchImageItems_WithNetworkError_ThrowsError() async {
+    func testFetchCryptos_WithNetworkError_ThrowsError() async {
         mockNetworkService.error = NetworkError.invalidResponse
 
         do {
-            _ = try await sut.fetchCryptoCurrencies(text: "test")
+            _ = try await sut.fetchCryptos()
             XCTFail("Expected error to be thrown")
         } catch {
             XCTAssertEqual(error as? NetworkError, NetworkError.invalidResponse)
         }
     }
 }
-// MARK: - ImageUrl
+// MARK: - FetchExchangeRates
 
 extension ApiServiceTests {
 
-    func testImageUrl_WithValidImageItem_ReturnsCorrectURL() throws {
-        let imageItem = ImageItem(id: "123",
-                                  server: "server1",
-                                  secret: "abc",
-                                  title: "test")
-
-        let url = try sut.imageUrl(imageItem: imageItem)
-
-        let expectedUrlString = "https://live.static.com/server1/123_abc_q.jpg"
-        XCTAssertEqual(url.absoluteString, expectedUrlString)
+    func testFetchExchangeRates_WithValidResponse_ReturnsExchangeRates() async throws {
+        let expectedUSDRate: Double = 10
+        let expectedSEKRate: Double = 2.3
+        let exchangeRates = ExchangeRates(rates: ["USD": expectedUSDRate, "SEK": expectedSEKRate])
+        mockNetworkService.mockResult = exchangeRates
+        let result = try await sut.fetchExchangeRates()
+        XCTAssertEqual(result.rates["USD"], expectedUSDRate)
+        XCTAssertEqual(result.rates["SEK"], expectedSEKRate)
     }
 
-    func testImageUrl_WithInvalidServer_ThrowsError() {
-        let imageItem = ImageItem(id: "",
-                                  server: "",
-                                  secret: "",
-                                  title: "")
-
-        XCTAssertThrowsError(try sut.imageUrl(imageItem: imageItem)) { error in
-            XCTAssertEqual(error as? NetworkError, NetworkError.invalidUrl)
-        }
-    }
+    func testFetchExchangeRates_WithNetworkError_ThrowsError() async {
+        let expectedError = NetworkError.failedToDecodeResponse
+        mockNetworkService.error = expectedError
+        do {
+            _ = try await sut.fetchExchangeRates()
+            XCTFail("Expected error to be thrown")
+        } catch {
+            XCTAssertEqual(error as? NetworkError, expectedError)
+        }    }
 }

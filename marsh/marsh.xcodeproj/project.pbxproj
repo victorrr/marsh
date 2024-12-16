@@ -32,7 +32,12 @@
 		E04148872D09D7C300509002 /* Exceptions for "marsh" folder in "marshTests" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				Extensions/StringExtension.swift,
+				Models/CryptoItem.swift,
+				Models/ExchangeRates.swift,
+				Service/ApiService.swift,
 				Service/NetworkError.swift,
+				Service/NetworkServiceProtocol.swift,
 			);
 			target = E041484A2D09CDB100509002 /* marshTests */;
 		};
