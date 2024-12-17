@@ -8,11 +8,9 @@ final class MockNetworkService: NetworkServiceProtocol {
         if let error = error {
             throw error
         }
-
         if let result = mockResult as? T {
             return result
         }
-
         throw NetworkError.invalidResponse
     }
 }
