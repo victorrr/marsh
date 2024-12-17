@@ -1,10 +1,3 @@
-//
-//  ExchangeRates.swift
-//  marsh
-//
-//  Created by Victor Rendon on 2024-12-12.
-//
-
 import Foundation
 
 struct ExchangeRates: Codable {

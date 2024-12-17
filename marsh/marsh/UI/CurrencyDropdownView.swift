@@ -1,10 +1,3 @@
-//
-//  CurrencyDropdownView.swift
-//  marsh
-//
-//  Created by Victor Rendon on 2024-12-12.
-//
-
 import SwiftUI
 
 struct CurrencyDropdownView: View {

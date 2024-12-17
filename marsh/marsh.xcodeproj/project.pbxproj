@@ -38,6 +38,7 @@
 				Service/ApiService.swift,
 				Service/NetworkError.swift,
 				Service/NetworkServiceProtocol.swift,
+				Service/PreviewNetworkService.swift,
 			);
 			target = E041484A2D09CDB100509002 /* marshTests */;
 		};

@@ -98,10 +98,12 @@ private extension CryptosListView {
 
 // MARK: - Preview
 
-private var previewNetworkService: MockNetworkService {
-    let networkService = MockNetworkService()
-    let items = [CryptoItem(name: "btc", price: 100)]
-    networkService.mockResult = items
+private var previewNetworkService: PreviewNetworkService {
+    let networkService = PreviewNetworkService()
+    let cryptoItems = [CryptoItem(name: "btc", price: 100)]
+    let exchangeRates = ExchangeRates(rates: ["USD": 10, "SEK": 2])
+    networkService.cryptoItemsResult = cryptoItems
+    networkService.exchangeRatesResult = exchangeRates
     return networkService
 }
 
